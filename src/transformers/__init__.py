@@ -1,6 +1,3 @@
-from .utils import OptionalDependencyNotAvailable
-
-
 # flake8: noqa
 # There's no way to ignore "F401 '...' imported but unused" warnings in this
 # module, but to preserve other warnings. So, don't check this module at all.
@@ -32,6 +29,7 @@ from typing import TYPE_CHECKING
 # Check the dependencies satisfy the minimal versions required.
 from . import dependency_versions_check
 from .utils import (
+    OptionalDependencyNotAvailable,
     _LazyModule,
     is_flax_available,
     is_scatter_available,
@@ -2876,7 +2874,6 @@ if TYPE_CHECKING:
         from .models.xlnet import XLNetTokenizerFast
         from .tokenization_utils_fast import PreTrainedTokenizerFast
 
-
     try:
         if not (is_sentencepiece_available() and is_tokenizers_available()):
             raise OptionalDependencyNotAvailable()
@@ -4290,7 +4287,6 @@ if TYPE_CHECKING:
 
         # Trainer
         from .trainer_tf import TFTrainer
-
 
     try:
         if not is_flax_available():

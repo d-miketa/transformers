@@ -773,6 +773,12 @@ class DummyObject(type):
         requires_backends(cls, cls._backends)
 
 
+class OptionalDependencyNotAvailable(BaseException):
+    """Exception class to be emitted during `is_backend_available` checks."""
+
+    pass
+
+
 def torch_required(func):
     # Chose a different decorator name than in tests so it's clear they are not the same.
     @wraps(func)

@@ -59,6 +59,7 @@ from .utils import (
     EntryNotFoundError,
     ExplicitEnum,
     ModelOutput,
+    OptionalDependencyNotAvailable,
     PaddingStrategy,
     PushToHubMixin,
     RepositoryNotFoundError,
