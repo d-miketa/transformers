@@ -1,3 +1,14 @@
+from typing import TYPE_CHECKING
+
+from ...utils import (
+    OptionalDependencyNotAvailable,
+    _LazyModule,
+    is_tf_available,
+    is_tokenizers_available,
+    is_torch_available,
+)
+
+
 # flake8: noqa
 # There's no way to ignore "F401 '...' imported but unused" warnings in this
 # module, but to preserve other warnings. So, don't check this module at all.
@@ -16,9 +27,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import TYPE_CHECKING
 
-from ...utils import _LazyModule, is_tf_available, is_tokenizers_available, is_torch_available
 
 
 _import_structure = {
@@ -30,10 +39,20 @@ _import_structure = {
     "tokenization_longformer": ["LongformerTokenizer"],
 }
 
-if is_tokenizers_available():
+try:
+    if not is_tokenizers_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["tokenization_longformer_fast"] = ["LongformerTokenizerFast"]
 
-if is_torch_available():
+try:
+    if not is_torch_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["modeling_longformer"] = [
         "LONGFORMER_PRETRAINED_MODEL_ARCHIVE_LIST",
         "LongformerForMaskedLM",
@@ -46,7 +65,12 @@ if is_torch_available():
         "LongformerSelfAttention",
     ]
 
-if is_tf_available():
+try:
+    if not is_tf_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["modeling_tf_longformer"] = [
         "TF_LONGFORMER_PRETRAINED_MODEL_ARCHIVE_LIST",
         "TFLongformerForMaskedLM",
@@ -68,10 +92,20 @@ if TYPE_CHECKING:
     )
     from .tokenization_longformer import LongformerTokenizer
 
-    if is_tokenizers_available():
+    try:
+        if not is_tokenizers_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .tokenization_longformer_fast import LongformerTokenizerFast
 
-    if is_torch_available():
+    try:
+        if not is_torch_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .modeling_longformer import (
             LONGFORMER_PRETRAINED_MODEL_ARCHIVE_LIST,
             LongformerForMaskedLM,
@@ -84,7 +118,12 @@ if TYPE_CHECKING:
             LongformerSelfAttention,
         )
 
-    if is_tf_available():
+    try:
+        if not is_tf_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .modeling_tf_longformer import (
             TF_LONGFORMER_PRETRAINED_MODEL_ARCHIVE_LIST,
             TFLongformerForMaskedLM,
@@ -97,7 +136,6 @@ if TYPE_CHECKING:
             TFLongformerSelfAttention,
         )
 
-else:
     import sys
 
     sys.modules[__name__] = _LazyModule(__name__, globals()["__file__"], _import_structure, module_spec=__spec__)

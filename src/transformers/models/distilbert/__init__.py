@@ -1,3 +1,15 @@
+from typing import TYPE_CHECKING
+
+from ...utils import (
+    OptionalDependencyNotAvailable,
+    _LazyModule,
+    is_flax_available,
+    is_tf_available,
+    is_tokenizers_available,
+    is_torch_available,
+)
+
+
 # flake8: noqa
 # There's no way to ignore "F401 '...' imported but unused" warnings in this
 # module, but to preserve other warnings. So, don't check this module at all.
@@ -16,9 +28,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import TYPE_CHECKING
 
-from ...utils import _LazyModule, is_flax_available, is_tf_available, is_tokenizers_available, is_torch_available
 
 
 _import_structure = {
@@ -30,10 +40,20 @@ _import_structure = {
     "tokenization_distilbert": ["DistilBertTokenizer"],
 }
 
-if is_tokenizers_available():
+try:
+    if not is_tokenizers_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["tokenization_distilbert_fast"] = ["DistilBertTokenizerFast"]
 
-if is_torch_available():
+try:
+    if not is_torch_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["modeling_distilbert"] = [
         "DISTILBERT_PRETRAINED_MODEL_ARCHIVE_LIST",
         "DistilBertForMaskedLM",
@@ -45,7 +65,12 @@ if is_torch_available():
         "DistilBertPreTrainedModel",
     ]
 
-if is_tf_available():
+try:
+    if not is_tf_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["modeling_tf_distilbert"] = [
         "TF_DISTILBERT_PRETRAINED_MODEL_ARCHIVE_LIST",
         "TFDistilBertForMaskedLM",
@@ -58,7 +83,12 @@ if is_tf_available():
         "TFDistilBertPreTrainedModel",
     ]
 
-if is_flax_available():
+try:
+    if not is_flax_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["modeling_flax_distilbert"] = [
         "FlaxDistilBertForMaskedLM",
         "FlaxDistilBertForMultipleChoice",
@@ -78,10 +108,20 @@ if TYPE_CHECKING:
     )
     from .tokenization_distilbert import DistilBertTokenizer
 
-    if is_tokenizers_available():
+    try:
+        if not is_tokenizers_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .tokenization_distilbert_fast import DistilBertTokenizerFast
 
-    if is_torch_available():
+    try:
+        if not is_torch_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .modeling_distilbert import (
             DISTILBERT_PRETRAINED_MODEL_ARCHIVE_LIST,
             DistilBertForMaskedLM,
@@ -93,7 +133,12 @@ if TYPE_CHECKING:
             DistilBertPreTrainedModel,
         )
 
-    if is_tf_available():
+    try:
+        if not is_tf_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .modeling_tf_distilbert import (
             TF_DISTILBERT_PRETRAINED_MODEL_ARCHIVE_LIST,
             TFDistilBertForMaskedLM,
@@ -106,7 +151,12 @@ if TYPE_CHECKING:
             TFDistilBertPreTrainedModel,
         )
 
-    if is_flax_available():
+    try:
+        if not is_flax_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .modeling_flax_distilbert import (
             FlaxDistilBertForMaskedLM,
             FlaxDistilBertForMultipleChoice,
@@ -117,7 +167,6 @@ if TYPE_CHECKING:
             FlaxDistilBertPreTrainedModel,
         )
 
-else:
     import sys
 
     sys.modules[__name__] = _LazyModule(__name__, globals()["__file__"], _import_structure, module_spec=__spec__)

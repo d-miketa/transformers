@@ -1,3 +1,15 @@
+from typing import TYPE_CHECKING
+
+from ...utils import (
+    OptionalDependencyNotAvailable,
+    _LazyModule,
+    is_sentencepiece_available,
+    is_tokenizers_available,
+    is_torch_available,
+    is_vision_available,
+)
+
+
 # flake8: noqa
 # There's no way to ignore "F401 '...' imported but unused" warnings in this
 # module, but to preserve other warnings. So, don't check this module at all.
@@ -16,39 +28,60 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import TYPE_CHECKING
 
-from ...utils import (
-    _LazyModule,
-    is_sentencepiece_available,
-    is_tokenizers_available,
-    is_torch_available,
-    is_vision_available,
-)
 
 
 _import_structure = {}
 
-if is_sentencepiece_available():
+try:
+    if not is_sentencepiece_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["tokenization_layoutxlm"] = ["LayoutXLMTokenizer"]
 
-if is_tokenizers_available():
+try:
+    if not is_tokenizers_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["tokenization_layoutxlm_fast"] = ["LayoutXLMTokenizerFast"]
 
-if is_vision_available():
+try:
+    if not is_vision_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["processing_layoutxlm"] = ["LayoutXLMProcessor"]
 
 if TYPE_CHECKING:
-    if is_sentencepiece_available():
+    try:
+        if not is_sentencepiece_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .tokenization_layoutxlm import LayoutXLMTokenizer
 
-    if is_tokenizers_available():
+    try:
+        if not is_tokenizers_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .tokenization_layoutxlm_fast import LayoutXLMTokenizerFast
 
-    if is_vision_available():
+    try:
+        if not is_vision_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .processing_layoutlmv2 import LayoutXLMProcessor
 
-else:
     import sys
 
     sys.modules[__name__] = _LazyModule(__name__, globals()["__file__"], _import_structure, module_spec=__spec__)

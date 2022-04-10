@@ -1,3 +1,8 @@
+from typing import TYPE_CHECKING
+
+from ...utils import OptionalDependencyNotAvailable, _LazyModule, is_torch_available, is_vision_available
+
+
 # flake8: noqa
 # There's no way to ignore "F401 '...' imported but unused" warnings in this
 # module, but to preserve other warnings. So, don't check this module at all.
@@ -16,19 +21,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import TYPE_CHECKING
 
-from ...utils import _LazyModule, is_torch_available, is_vision_available
 
 
 _import_structure = {
     "configuration_imagegpt": ["IMAGEGPT_PRETRAINED_CONFIG_ARCHIVE_MAP", "ImageGPTConfig"],
 }
 
-if is_vision_available():
+try:
+    if not is_vision_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["feature_extraction_imagegpt"] = ["ImageGPTFeatureExtractor"]
 
-if is_torch_available():
+try:
+    if not is_torch_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["modeling_imagegpt"] = [
         "IMAGEGPT_PRETRAINED_MODEL_ARCHIVE_LIST",
         "ImageGPTForCausalImageModeling",
@@ -42,10 +55,20 @@ if is_torch_available():
 if TYPE_CHECKING:
     from .configuration_imagegpt import IMAGEGPT_PRETRAINED_CONFIG_ARCHIVE_MAP, ImageGPTConfig
 
-    if is_vision_available():
+    try:
+        if not is_vision_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .feature_extraction_imagegpt import ImageGPTFeatureExtractor
 
-    if is_torch_available():
+    try:
+        if not is_torch_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .modeling_imagegpt import (
             IMAGEGPT_PRETRAINED_MODEL_ARCHIVE_LIST,
             ImageGPTForCausalImageModeling,
@@ -55,7 +78,6 @@ if TYPE_CHECKING:
             load_tf_weights_in_imagegpt,
         )
 
-else:
     import sys
 
     sys.modules[__name__] = _LazyModule(__name__, globals()["__file__"], _import_structure, module_spec=__spec__)

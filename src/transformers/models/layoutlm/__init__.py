@@ -1,3 +1,16 @@
+from typing import TYPE_CHECKING
+
+from ...utils import (
+    OptionalDependencyNotAvailable,
+    _LazyModule,
+    is_tf_available,
+    is_tokenizers_available,
+    is_torch_available,
+)
+from .configuration_layoutlm import LAYOUTLM_PRETRAINED_CONFIG_ARCHIVE_MAP, LayoutLMConfig
+from .tokenization_layoutlm import LayoutLMTokenizer
+
+
 # flake8: noqa
 # There's no way to ignore "F401 '...' imported but unused" warnings in this
 # module, but to preserve other warnings. So, don't check this module at all.
@@ -16,11 +29,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import TYPE_CHECKING
 
-from ...utils import _LazyModule, is_tf_available, is_tokenizers_available, is_torch_available
-from .configuration_layoutlm import LAYOUTLM_PRETRAINED_CONFIG_ARCHIVE_MAP, LayoutLMConfig
-from .tokenization_layoutlm import LayoutLMTokenizer
 
 
 _import_structure = {
@@ -28,10 +37,20 @@ _import_structure = {
     "tokenization_layoutlm": ["LayoutLMTokenizer"],
 }
 
-if is_tokenizers_available():
+try:
+    if not is_tokenizers_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["tokenization_layoutlm_fast"] = ["LayoutLMTokenizerFast"]
 
-if is_torch_available():
+try:
+    if not is_torch_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["modeling_layoutlm"] = [
         "LAYOUTLM_PRETRAINED_MODEL_ARCHIVE_LIST",
         "LayoutLMForMaskedLM",
@@ -41,7 +60,12 @@ if is_torch_available():
         "LayoutLMPreTrainedModel",
     ]
 
-if is_tf_available():
+try:
+    if not is_tf_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
     _import_structure["modeling_tf_layoutlm"] = [
         "TF_LAYOUTLM_PRETRAINED_MODEL_ARCHIVE_LIST",
         "TFLayoutLMForMaskedLM",
@@ -57,10 +81,20 @@ if TYPE_CHECKING:
     from .configuration_layoutlm import LAYOUTLM_PRETRAINED_CONFIG_ARCHIVE_MAP, LayoutLMConfig, LayoutLMOnnxConfig
     from .tokenization_layoutlm import LayoutLMTokenizer
 
-    if is_tokenizers_available():
+    try:
+        if not is_tokenizers_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .tokenization_layoutlm_fast import LayoutLMTokenizerFast
 
-    if is_torch_available():
+    try:
+        if not is_torch_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .modeling_layoutlm import (
             LAYOUTLM_PRETRAINED_MODEL_ARCHIVE_LIST,
             LayoutLMForMaskedLM,
@@ -69,7 +103,12 @@ if TYPE_CHECKING:
             LayoutLMModel,
             LayoutLMPreTrainedModel,
         )
-    if is_tf_available():
+    try:
+        if not is_tf_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
         from .modeling_tf_layoutlm import (
             TF_LAYOUTLM_PRETRAINED_MODEL_ARCHIVE_LIST,
             TFLayoutLMForMaskedLM,
@@ -80,7 +119,6 @@ if TYPE_CHECKING:
             TFLayoutLMPreTrainedModel,
         )
 
-else:
     import sys
 
     sys.modules[__name__] = _LazyModule(__name__, globals()["__file__"], _import_structure, module_spec=__spec__)
